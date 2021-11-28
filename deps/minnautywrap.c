@@ -1,9 +1,16 @@
 #include <nauty.h>
+#include <nautinv.h>
 
 optionblk defaultoptions_graph() {
 	DEFAULTOPTIONS_GRAPH(options);
 	return options;
 }
+
+optionblk defaultoptions_digraph() {
+	DEFAULTOPTIONS_DIGRAPH(options);
+	return options;
+}
+
 
 long wordsize() {
 	return WORDSIZE;
@@ -59,6 +66,6 @@ setword graph_receiver(graph *g, int len) {
 	return acc;
 }
 
-/* nauty(g->matrix, g->lab, g->ptn, NULL, g->orbits, */
-/*         g->options, g->stats,  g->workspace, g->worksize, */
-/*         g->no_setwords, g->no_vertices, NULL); */
+ nauty(g->matrix, g->lab, g->ptn, NULL, g->orbits,
+         g->options, g->stats,  g->workspace, g->worksize,
+         g->no_setwords, g->no_vertices, NULL); */

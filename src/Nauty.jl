@@ -22,7 +22,7 @@ function depsdir(pkg::AbstractString)
     return pkgdir
 end
 
-const LIB_FILE = joinpath(depsdir("Nauty"), "minnautywrap." * dlext) 
+const LIB_FILE = joinpath(depsdir("Nauty"), "minnautywrap." * dlext)
 
 const WORDSIZE = ccall((:wordsize, LIB_FILE), Int, ())
 
@@ -111,6 +111,8 @@ Not an inner constructor any more because I don't want to override default const
 """
 const optionblk() = ccall((:defaultoptions_graph, LIB_FILE), optionblk, ())
 const optionblk_mutable() = optionblk_mutable(optionblk())
+const doptionblk() = ccall((:defaultoptions_digraph, LIB_FILE), optionblk, ())
+const doptionblk_mutable() = optionblk_mutable(doptionblk())
 
 """
     pprintobject(io, obj::T) where T
@@ -159,6 +161,7 @@ const NautyGraphC = Ptr{UInt64}
 # }}}
 
 const DEFAULTOPTIONS_GRAPH = optionblk()
+const DEFAULTOPTIONS_DIGRAPH = doptionblk()
 
 # Interface:
 
@@ -209,7 +212,7 @@ Raw interface to nauty.c/densenauty. See section 6 (Calling nauty and Traces) of
 Equivalent to densenauty(lg_to_nauty(g), options).
 """
 function densenauty(g::NautyGraph,
-                    options = DEFAULTOPTIONS_GRAPH,
+                    options = DEFAULTOPTIONS_DIGRAPH,
                     labelling = nothing::Union{Cvoid, Array{Cint}},
                     partition = nothing::Union{Cvoid, Array{Cint}})
 
@@ -373,7 +376,7 @@ function label_to_adj(label)
     temp = BitArray(undef,WORDSIZE,size(label,1))
     temp.chunks = label
     temparr = Array{Int64,2}(temp[end-size(label,1)+1:end,:])
-    flipdim(temparr',2)
+    reverse(temparr',dims=2)
 end
 
 """
@@ -427,7 +430,7 @@ function LightGraphs.Experimental.has_isomorph(alg::NautyAlg, g1::LightGraphs.Ab
                          vertex_relation::Union{Cvoid, Function}=nothing,
                          edge_relation::Union{Cvoid, Function}=nothing)::Bool
     !LightGraphs.Experimental.could_have_isomorph(g1, g2) && return false
-    
+
     baked_canonical_form(g1).canong == baked_canonical_form(g2).canong
 end
 

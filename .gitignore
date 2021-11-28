@@ -1,2 +1,4 @@
 *.so
 deps/build.log
+
+.DS_Store

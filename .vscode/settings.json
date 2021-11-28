@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.mmt": "lean",
+        "nautinv.h": "c"
+    }
+}
